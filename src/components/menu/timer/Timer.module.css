@@ -1,0 +1,23 @@
+.container {
+}
+
+.toDo_header {
+    padding: 19px 40px;
+    background-color: #C4C4C4;
+    display: flex;
+    justify-content: space-between;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 17px;
+    color: #FFFFFF;
+}
+
+.toDo_name {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 17px;
+    color: #FFFFFF;
+}
