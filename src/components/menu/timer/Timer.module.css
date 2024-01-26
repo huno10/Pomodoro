@@ -1,4 +1,5 @@
 .container {
+    width: 733px;
 }
 
 .toDo_header {
@@ -20,4 +21,67 @@
     font-weight: 400;
     line-height: 17px;
     color: #FFFFFF;
+}
+
+.timer_block {
+    padding: 55px 0 107px;
+    background-color: #F4F4F4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer {
+    display: flex;
+    position: relative;
+}
+
+.interval {
+    font-size: 150px;
+    line-height: 179px;
+    font-weight: 200;
+    color: #333333;
+    padding-right: 25px;
+}
+
+.add_interval {
+    position: absolute;
+    top: 40%;
+    right: -50px;
+}
+
+.toDo_info {
+    font-size: 16px;
+    line-height: 17px;
+    font-weight: 400;
+    color: #333333;
+    margin-bottom: 32px;
+}
+
+.toDo_span {
+    color: #999999;
+}
+
+.btn_wrapper {
+    display: flex;
+}
+
+.btn_start {
+    padding: 17px 48px;
+    background-color: #A8B64F;
+    font-size: 16px;
+    line-height: 17px;
+    font-weight: 500;
+    color: #FFFFFF;
+    margin-right: 25px;
+}
+
+.btn_stop {
+    padding: 17px 48px;
+    font-size: 16px;
+    line-height: 17px;
+    font-weight: 500;
+    color: #C4C4C4;
+    border: 2px solid #C4C4C4;
 }
