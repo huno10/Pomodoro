@@ -1,0 +1,19 @@
+// Исходный интервал в формате 'минуты:секунды'
+let intervalString = '25:00';
+
+// Разбиваем строку на минуты и секунды
+let [minutes, seconds] = intervalString.split(':');
+
+// Преобразуем минуты и секунды в миллисекунды
+let totalMilliseconds = (parseInt(minutes) * 60 + parseInt(seconds)) * 1000;
+
+// Создаем объект Date на основе миллисекунд
+let intervalDate = new Date(totalMilliseconds);
+
+// Уменьшаем интервал на одну секунду
+intervalDate.setSeconds(intervalDate.getSeconds() - 1);
+
+// Получаем новый интервал в формате 'минуты:секунды'
+let newIntervalString = `${intervalDate.getMinutes()}:${intervalDate.getSeconds()}`;
+
+console.log(newIntervalString);

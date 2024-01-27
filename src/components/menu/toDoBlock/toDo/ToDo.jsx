@@ -1,23 +1,28 @@
 import React, { useState } from 'react';
 import styles from './ToDo.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTask } from '../../../../store/store';
+import { addTodo, removeTodo } from '../../../../store/store';
 import { ToDoItem } from './toDoItem/ToDoItem';
 
 export const ToDo = () => {
     const dispatch = useDispatch();
-    
     const tasks = useSelector((state) => state.tasks);
-    const [newTask, setNewTask] = useState('');
 
+    const [value, setvalue] = useState('');
     const handleInputChange = (event) => {
-        setNewTask(event.target.value);
+        setvalue(event.target.value);
     };
 
     const handleAddTask = () => {
-        if (newTask.trim() !== '') {
-            dispatch(addTask({ value: newTask, time: '25:00' }));
-            setNewTask('');
+        if (value.trim() !== '') {
+            dispatch(addTodo({ value }));
+            setvalue('');
+        }
+    };
+
+    const handleRemoveTask = (id) => {
+        if (id) {
+            dispatch(removeTodo({ id }));
         }
     };
 
@@ -27,7 +32,7 @@ export const ToDo = () => {
                 <input
                     className={styles.input}
                     type="text"
-                    value={newTask}
+                    value={value}
                     onChange={handleInputChange}
                     placeholder="Название задачи"
                 />
@@ -37,7 +42,7 @@ export const ToDo = () => {
             </div>
             <ul>
                 {tasks.map((task, index) => (
-                    <ToDoItem key={index} task={task.value} index={index} />
+                    <ToDoItem key={index} task={task} index={index} handleRemoveTask={handleRemoveTask} />
                 ))}
             </ul>
         </div>

@@ -1,0 +1,87 @@
+Создаем папку Store и создаем файл нашего стора 
+
+Импортируем configureStore из Redux/toolkit
+import { configureStore, createSlice } from '@reduxjs/toolkit';
+
+Дальше создаем слайс 
+const tasksSlice = createSlice({
+    name: 'tasks',
+    initialState: [],
+    reducers: {
+        addTask: (state, action) => {
+            return [...state, action.payload];
+        },
+    },
+});
+
+Через createSlice передаем объект {
+    name: 'название слайса'
+    initialState: [] - масив данных, которые принимает начальный стейт
+    reducers: { передаем редюсер для этого стейта и внутри передаем все экшены которые будет выполнять этот редюсер
+        addTask: (state, action) => {
+            return [...state, action.payload];
+        },
+    }
+}
+
+
+import { configureStore, createSlice } from '@reduxjs/toolkit'; - Импортируем необходимые методы
+
+const tasksSlice = createSlice({
+    name: 'todos', Это имя слайса, которое будет использоваться для хранения этой части состояния в хранилище Redux. В данном случае, 'todos' будет именем ключа, по которому эта часть состояния будет доступна в хранилище Redux.
+    initialState: [], // Начальное состояние слайса, представленное в виде массива задач
+    reducers: {
+        addTodo: (state, action) => { Это редьюсер, который обрабатывает действие addTodo. Он принимает текущее состояние state и объект action, содержащий данные для обновления состояния.
+            state.push({ Добавляет новый объект, представляющий задачу, в текущий массив состояния state.
+                id: Date.now(), // Уникальный идентификатор задачи, представленный текущим временем в миллисекундах
+                value: action.payload.value, // Текст задачи, переданный через action.payload
+                completed: false, // Флаг, указывающий, выполнена ли задача
+                interval: '25:00' // Интервал времени для задачи
+            });
+        },
+         removeTodo: (state, action) => {
+            const idToRemove = action.payload.id;
+            return state.filter(todo => todo.id !== idToRemove);
+        },
+    },
+});
+
+export const { addTodo } = tasksSlice.actions;
+
+const store = configureStore({
+    reducer: {
+        tasks: tasksSlice.reducer,
+    },
+});
+
+export default store;
+
+
+в компоненте вызываем методы и фунции Редакс
+
+1. const handleAddTask = () => { создаем хендлер который будет делать действие при изменении
+        if (value.trim() !== '') {
+            dispatch(addTodo({ value })); в нашем случай добавление нового текста и объекта в массив
+            setvalue('');
+        }
+     };
+
+            addTodo: (state, action) => {
+                state.push({
+                    id: Date.now(),
+                    value: action.payload.value,
+                    complited: false,
+                    interval: '25:00'
+                })
+            },
+
+2.  const handleRemoveTask = (id) => { хендлер обрабатывает события для передачи данных в редюсер
+        if (id) {
+            dispatch(removeTodo({ id }));
+        }
+    };
+
+        removeTodo: (state, action) => { в сторе уже получает id и выполняет функцию которая указана
+            const idToRemove = action.payload.id;
+            return state.filter(todo => todo.id !== idToRemove);
+        },

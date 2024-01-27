@@ -6,7 +6,7 @@ import dicSvg from '../../../../../img/dic.svg'
 import redSvg from '../../../../../img/red.svg'
 import deleteSvg from '../../../../../img/delete.svg'
 
-export const ToDoItem = ({ task, index }) => {
+export const ToDoItem = ({ task, index, handleRemoveTask }) => {
     const ref = useRef(null);
     const [dropDownOpen, setDropDownOpen] = useState(false)
 
@@ -37,7 +37,7 @@ export const ToDoItem = ({ task, index }) => {
         <li className={styles.item}>
             <div className={styles.item_block}>
                 <span className={styles.index}>{index + 1}</span>
-                <h3 className={styles.title}>{task}</h3>
+                <h3 className={styles.title}>{task.value}</h3>
             </div>
             <div ref={ref} className={styles.dropDown_wrapper}>
                 <button className={styles.btn} type='button' onClick={toggleDropDown} >
@@ -58,7 +58,7 @@ export const ToDoItem = ({ task, index }) => {
                                 <img className={styles.dropdown_img} src={redSvg} alt="" />
                                 <span className={styles.dropdown_span}>Редактировать</span>
                             </button>
-                            <button type='button' className={styles.dropdown_item}>
+                            <button type='button' className={styles.dropdown_item} onClick={() => handleRemoveTask(task.id)}>
                                 <img className={styles.dropdown_img} src={deleteSvg} alt="" />
                                 <span className={styles.dropdown_span}>Удалить</span>
                             </button>
