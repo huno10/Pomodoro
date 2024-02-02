@@ -45,10 +45,31 @@
     padding-right: 25px;
 }
 
-.add_interval {
+.add_interval_inc {
     position: absolute;
     top: 40%;
     right: -50px;
+}
+
+.add_interval_dec {
+    position: absolute;
+    top: 40%;
+    left: -60px;
+    background-color: #C4C4C4;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    padding-bottom: 7px;
+}
+
+.btn_dec {
+    height: 2px;
+    background-color: #FFFFFF;
+    font-size: 16px;
+    line-height: 1;
+    display: inline-block;
+    width: 16px;
+    text-align: center;
 }
 
 .toDo_info {

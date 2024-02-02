@@ -6,7 +6,7 @@ import dicSvg from '../../../../../img/dic.svg'
 import redSvg from '../../../../../img/red.svg'
 import deleteSvg from '../../../../../img/delete.svg'
 
-export const ToDoItem = ({ task, index, handleRemoveTask }) => {
+export const ToDoItem = ({ task, index, handleRemoveTask, handleIncreaseTimeInterval, handleClickTaskItem }) => {
     const ref = useRef(null);
     const [dropDownOpen, setDropDownOpen] = useState(false)
 
@@ -33,9 +33,11 @@ export const ToDoItem = ({ task, index, handleRemoveTask }) => {
         };
     }, [handleClickOutside]);
 
+
+
     return (
-        <li className={styles.item}>
-            <div className={styles.item_block}>
+        <li className={styles.item} onClick={() => handleClickTaskItem(task.id, index)}>
+            <div className={styles.item_block} >
                 <span className={styles.index}>{index + 1}</span>
                 <h3 className={styles.title}>{task.value}</h3>
             </div>
@@ -46,20 +48,20 @@ export const ToDoItem = ({ task, index, handleRemoveTask }) => {
                 {dropDownOpen && (
                     <div className={styles.btn_dropdown} >
                         <div className={styles.dropdown_list} >
-                            <button type='button' className={styles.dropdown_item}>
-                                <img className={styles.dropdown_img} src={incSvg} alt="" />
+                            <button type='button' className={styles.dropdown_item} onClick={() => handleIncreaseTimeInterval(task.id, true)}>
+                                <img className={styles.dropdown_img} src={incSvg} alt="увеличить" />
                                 <span className={styles.dropdown_span}>Увеличить</span>
                             </button>
-                            <button type='button' className={styles.dropdown_item}>
-                                <img className={styles.dropdown_img} src={dicSvg} alt="" />
+                            <button type='button' className={styles.dropdown_item} onClick={() => handleIncreaseTimeInterval(task.id, false)}>
+                                <img className={styles.dropdown_img} src={dicSvg} alt="уменшить" />
                                 <span className={styles.dropdown_span}>Уменшить</span>
                             </button>
                             <button type='button' className={styles.dropdown_item}>
-                                <img className={styles.dropdown_img} src={redSvg} alt="" />
+                                <img className={styles.dropdown_img} src={redSvg} alt="редактировать" />
                                 <span className={styles.dropdown_span}>Редактировать</span>
                             </button>
                             <button type='button' className={styles.dropdown_item} onClick={() => handleRemoveTask(task.id)}>
-                                <img className={styles.dropdown_img} src={deleteSvg} alt="" />
+                                <img className={styles.dropdown_img} src={deleteSvg} alt="удалить" />
                                 <span className={styles.dropdown_span}>Удалить</span>
                             </button>
                         </div>

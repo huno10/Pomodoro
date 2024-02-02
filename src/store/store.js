@@ -8,19 +8,49 @@ const tasksSlice = createSlice({
             state.push({
                 id: Date.now(),
                 value: action.payload.value,
-                complited: false,
-                interval: '25:00'
+                complited: action.payload.complited,
+                interval: action.payload.interval,
+                timerRunning: false
             })
         },
         removeTodo: (state, action) => {
             const idToRemove = action.payload.id;
             return state.filter(todo => todo.id !== idToRemove);
         },
+        increaseTimeInterval: (state, action) => {
+            const { id, newInterval } = action.payload;
+
+            return state.map(todo => {
+                if (todo.id === id) {
+                    return {
+                        ...todo,
+                        interval: newInterval,
+                    };
+                }
+                return todo;
+            });
+        },
+
+        toggleTimerRunning: (state, action) => {
+            const { id, timerRunning } = action.payload;
+
+            return state.map(todo => {
+                if (todo.id === id) {
+                    return {
+                        ...todo,
+                        timerRunning: timerRunning,
+                    };
+                }
+                return todo;
+            });
+        },
     },
 });
 
 export const { addTodo } = tasksSlice.actions;
 export const { removeTodo } = tasksSlice.actions
+export const { increaseTimeInterval } = tasksSlice.actions
+export const { toggleTimerRunning } = tasksSlice.actions
 
 const store = configureStore({
     reducer: {
