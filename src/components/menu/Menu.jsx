@@ -3,11 +3,8 @@ import styles from './Menu.module.css'
 import { ToDoBlock } from './toDoBlock/ToDoBlock'
 import { Timer } from './timer/Timer'
 
-// usf
-
 export const Menu = () => {
     const [taskId, setTaskId] = useState('');
-
     return (
         <menu className={styles.menu}>
             <div className={styles.container}>

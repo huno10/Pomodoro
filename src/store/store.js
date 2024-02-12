@@ -44,6 +44,19 @@ const tasksSlice = createSlice({
                 return todo;
             });
         },
+        toggleСomplited: (state, action) => {
+            const { id, complited } = action.payload;
+
+            return state.map(todo => {
+                if (todo.id === id) {
+                    return {
+                        ...todo,
+                        complited: complited,
+                    };
+                }
+                return todo;
+            });
+        },
     },
 });
 
@@ -51,6 +64,7 @@ export const { addTodo } = tasksSlice.actions;
 export const { removeTodo } = tasksSlice.actions
 export const { increaseTimeInterval } = tasksSlice.actions
 export const { toggleTimerRunning } = tasksSlice.actions
+export const { toggleСomplited } = tasksSlice.actions
 
 const store = configureStore({
     reducer: {

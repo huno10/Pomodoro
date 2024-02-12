@@ -5,8 +5,9 @@ import incSvg from '../../../../../img/inc.svg'
 import dicSvg from '../../../../../img/dic.svg'
 import redSvg from '../../../../../img/red.svg'
 import deleteSvg from '../../../../../img/delete.svg'
+import { DeleteItem } from './deleteItem/DeleteItem'
 
-export const ToDoItem = ({ task, index, handleRemoveTask, handleIncreaseTimeInterval, handleClickTaskItem }) => {
+export const ToDoItem = ({ task, index, handleRemoveTask, handleIncreaseTimeInterval, handleClickTaskItem, isOpenDeleted, setIsOpenDeleted }) => {
     const ref = useRef(null);
     const [dropDownOpen, setDropDownOpen] = useState(false)
 
@@ -66,6 +67,10 @@ export const ToDoItem = ({ task, index, handleRemoveTask, handleIncreaseTimeInte
                             </button>
                         </div>
                     </div>
+                )}
+
+                {isOpenDeleted && (
+                    <DeleteItem id={task.id} setIsOpenDeleted={setIsOpenDeleted}/>
                 )}
 
             </div>

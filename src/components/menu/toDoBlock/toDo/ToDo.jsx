@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ToDo.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTodo, removeTodo } from '../../../../store/store';
+import { addTodo } from '../../../../store/store';
 import { ToDoItem } from './toDoItem/ToDoItem';
 import { useHandleIntervalIncr } from '../../../../hooks/useHandleIntervalIncr';
 
@@ -9,6 +9,8 @@ export const ToDo = ({ setTaskId }) => {
     const dispatch = useDispatch();
     const tasks = useSelector((state) => state.tasks);
     const isAnyTimerRunning = tasks.some(task => task.timerRunning);
+
+    const [isOpenDeleted, setIsOpenDeleted] = useState(false);
 
     const [value, setvalue] = useState('');
     const interval = '25:00';
@@ -24,10 +26,8 @@ export const ToDo = ({ setTaskId }) => {
         }
     };
 
-    const handleRemoveTask = (id) => {
-        if (id) {
-            dispatch(removeTodo({ id }));
-        }
+    const handleRemoveTask = () => {
+        setIsOpenDeleted(true)
     };
 
     const handleIntervalIncr = useHandleIntervalIncr();
@@ -59,6 +59,8 @@ export const ToDo = ({ setTaskId }) => {
                         task={task} index={index}
                         handleRemoveTask={handleRemoveTask}
                         handleIncreaseTimeInterval={handleIntervalIncr}
+                        isOpenDeleted={isOpenDeleted}
+                        setIsOpenDeleted={setIsOpenDeleted}
                     />
                 ))}
             </ul>

@@ -4,15 +4,17 @@ import intervalSvg from '../../../img/addInterval.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHandleIntervalIncr } from '../../../hooks/useHandleIntervalIncr';
 import { useInterval } from '../../../hooks/useInterval';
-import { increaseTimeInterval, toggleTimerRunning } from '../../../store/store';
+import { increaseTimeInterval, removeTodo, toggleTimerRunning, toggleСomplited } from '../../../store/store';
+import TimerBlock from './timerBlock/TimerBlock';
 
-export const Timer = ({ taskId }) => {
+export const Timer = ({ taskId: { id, index } }) => {
   const dispatch = useDispatch();
 
-  const { id, index } = taskId;
+  const [currentFormattedTime, setCurrentFormattedTime] = useState('');
   const [taskInfo, setTaskInfo] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [currentFormattedTime, setCurrentFormattedTime] = useState('');
+  const [isPaused, setIsPaused] = useState(false);
+  const [isComplited, setIsComplited] = useState(0);
 
   const task = useSelector((state) => {
     const foundTask = state.tasks.find((item) => item.id === id);
@@ -37,71 +39,60 @@ export const Timer = ({ taskId }) => {
   //Обработчик событий СТАРТ
   const handleStartClick = () => {
     setIsTimerRunning(true);
+    setIsPaused(true)
     dispatch(toggleTimerRunning({ id, timerRunning: true }));
   };
   //Обработчик событий СТОП
   const handleStopClick = () => {
     setIsTimerRunning(false);
+    setIsPaused(false)
     dispatch(increaseTimeInterval({ id, newInterval: currentFormattedTime }));
     dispatch(toggleTimerRunning({ id, timerRunning: false }));
   };
+  //Обработчик событий на ПАУЗА
+  const handlePauseClick = () => {
+    setIsTimerRunning(false);
+    setIsPaused(true)
+  }
+  //Обработчик событий на ПРОДОЛЖИТЬ
+  const handleContinueClick = () => {
+    setIsTimerRunning(true);
+    setIsPaused(true)
+  }
+  //Обработчик событий на СДЕЛАНО
+  const handleDoneClick = (id) => {
+    dispatch(increaseTimeInterval({ id, newInterval: currentFormattedTime }));
+    dispatch(toggleTimerRunning({ id, timerRunning: false }));
+    dispatch(toggleСomplited({ id, complited: true }))
+    dispatch(removeTodo({ id }))
+    setIsComplited((prev) => prev + 1)
+  }
 
   return (
     <div className={styles.container}>
       {taskInfo ? (
-        <>
-          <div className={styles.toDo_header}>
-            <h3 className={styles.title}>{value}</h3>
-            <p className={styles.toDo_name}>{`Помидор ${index !== -1 ? index + 1 : ''}`}</p>
-          </div>
-          <div className={styles.timer_block}>
-            <div className={styles.timer}>
-              <button className={styles.add_interval_dec} onClick={() => handleIntervalIncr(id, false)}>
-                <span className={styles.btn_dec}></span>
-              </button>
-              <p className={styles.interval}>{formattedTime || interval}</p>
-              <button className={styles.add_interval_inc} onClick={() => handleIntervalIncr(id, true)}>
-                <img src={intervalSvg} alt="" />
-              </button>
-            </div>
-            <div>
-              <p className={styles.toDo_info}>
-                <span className={styles.toDo_span}>{`Задача ${index !== -1 ? index + 1 : ''} - `}</span>
-                {value}
-              </p>
-            </div>
-            <div className={styles.btn_wrapper}>
-              <button className={styles.btn_start} onClick={handleStartClick}>Старт</button>
-              <button className={styles.btn_stop} onClick={handleStopClick}>Стоп</button>
-            </div>
-          </div>
-        </>
+        <TimerBlock
+          isTimerRunning={isTimerRunning}
+          formattedTime={formattedTime}
+          handleIntervalIncr={handleIntervalIncr}
+          handlePauseClick={handlePauseClick}
+          handleContinueClick={handleContinueClick}
+          handleStopClick={handleStopClick}
+          handleDoneClick={handleDoneClick}
+          handleStartClick={handleStartClick}
+          isPaused={isPaused}
+          value={value || 'Выберите задание'}
+          index={index !== -1 ? index + 1 : ''}
+          interval={interval || '00:00'}
+          id={id}
+        />
       ) : (
-        <>
-          <div className={styles.toDo_header}>
-            <h3 className={styles.title}>{'Выберите задание'}</h3>
-            <p className={styles.toDo_name}>{`Помидор`}</p>
-          </div>
-          <div className={styles.timer_block}>
-            <div className={styles.timer}>
-              <p className={styles.interval}>{'00:00'}</p>
-              <button className={styles.add_interval_inc}>
-                <img src={intervalSvg} alt="" />
-              </button>
-            </div>
-            <div>
-              <p className={styles.toDo_info}>
-                <span className={styles.toDo_span}>{`Нет задания `}</span>
-                {'- '}
-              </p>
-            </div>
-            <div className={styles.btn_wrapper}>
-              <button className={styles.btn_start}>Старт</button>
-              <button className={styles.btn_stop}>Стоп</button>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+        <TimerBlock
+          value={'Выберите задание'}
+          index={''}
+          interval={'00:00'} />
+      )
+      }
+    </div >
   );
 };
