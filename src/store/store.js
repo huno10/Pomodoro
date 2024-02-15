@@ -8,7 +8,6 @@ const tasksSlice = createSlice({
             state.push({
                 id: Date.now(),
                 value: action.payload.value,
-                complited: action.payload.complited,
                 interval: action.payload.interval,
                 timerRunning: false
             })
@@ -30,7 +29,6 @@ const tasksSlice = createSlice({
                 return todo;
             });
         },
-
         toggleTimerRunning: (state, action) => {
             const { id, timerRunning } = action.payload;
 
@@ -44,18 +42,44 @@ const tasksSlice = createSlice({
                 return todo;
             });
         },
-        toggleСomplited: (state, action) => {
-            const { id, complited } = action.payload;
+    },
+});
 
-            return state.map(todo => {
-                if (todo.id === id) {
-                    return {
-                        ...todo,
-                        complited: complited,
-                    };
-                }
-                return todo;
-            });
+// const statisticSlice = createSlice({
+//     name: 'statistics',
+//     initialState: [],
+//     reducers: {
+//         addStatistic: (state, action) => {
+//             state.push({
+//                 id: action.payload.id,
+//                 pause: action.payload.pauseStat,
+//                 stops: action.payload.stopsStat,
+//                 focus: action.payload.focusStat,
+//                 startInterval: action.payload.startInterval,
+//                 stopInterval: action.payload.stopInterval,
+//             })
+//         },
+//     }
+// })
+
+const statisticSlice = createSlice({
+    name: 'statistics',
+    initialState: {
+        workTime: 0,
+        //   stops: 0,
+        //   focus: 0,
+        startInterval: 0,
+        stopInterval: 0,
+    },
+    reducers: {
+        addStatistic: (state, action) => {
+            const { workTime, stopsStat, focusStat, startInterval, stopInterval } = action.payload;
+
+            state.workTime += workTime;
+            state.stops += stopsStat;
+            state.focus += focusStat;
+            state.startInterval = startInterval;
+            state.stopInterval = stopInterval;
         },
     },
 });
@@ -64,11 +88,14 @@ export const { addTodo } = tasksSlice.actions;
 export const { removeTodo } = tasksSlice.actions
 export const { increaseTimeInterval } = tasksSlice.actions
 export const { toggleTimerRunning } = tasksSlice.actions
-export const { toggleСomplited } = tasksSlice.actions
+
+export const { addStatistic } = statisticSlice.actions
+
 
 const store = configureStore({
     reducer: {
         tasks: tasksSlice.reducer,
+        stats: statisticSlice.reducer,
     },
 });
 

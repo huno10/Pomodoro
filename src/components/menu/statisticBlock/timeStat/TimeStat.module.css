@@ -1,0 +1,39 @@
+.container {
+    padding: 25px;
+    width: calc((100% - 60px) / 3);
+    display: flex;
+    justify-content: space-between;
+}
+
+.container_focus {
+    background-color: #FFDDA9;
+}
+
+.container_pause {
+    background-color: #DFDCFE;
+}
+
+.container_stop {
+    background-color: #C5F1FF;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.title {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 33px;
+    color: #333333;
+}
+
+.statistic {
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 76px;
+}

@@ -1,0 +1,61 @@
+.container {
+    margin-top: 50px;
+}
+
+.content {}
+
+.head_block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.title {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 33px;
+    color: #333333;
+}
+
+.select {
+    background-color: #F4F4F4;
+    padding: 19px 15px;
+    outline: none;
+    color: #333333;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 17px;
+    width: 370px;
+}
+
+.option {
+    border-bottom: 1px solid transparent;
+}
+
+.select:focus .option {
+    border-bottom-color: red;
+}
+
+.diagram_tomato {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.stat_wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.stat_box {
+    width: 405px;
+    height: 179px;
+    background-color: #FFDDA9;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+

@@ -25,7 +25,7 @@ export const useInterval = (interval, TimerRunning) => {
         if (TimerRunning && time > 0) {
             timerInterval = setInterval(() => {
                 setTime((prevTime) => prevTime - 1);
-            }, 1000);
+            }, 10);
         } else if (time === 0) {
             console.log('Таймер завершен!');
         }

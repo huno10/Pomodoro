@@ -1,0 +1,55 @@
+.date_box {
+    width: 296px;
+}
+
+.date_info {
+    padding: 25px;
+    height: 260px;
+    background-color: #F4F4F4;
+    margin-bottom: 32px;
+}
+
+.date_title {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 33px;
+    color: #333333;
+}
+
+.date_descr {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 28px;
+    color: #333333;
+}
+
+.tomato {
+    background-color: #F4F4F4;
+    padding: 23px 0 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.count_tomato {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 33px;
+    color: #999999;
+    margin-left: 15px;
+}
+
+.tomato_wrap {
+    background-color: #DC3E22;
+    padding: 9px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.tomato_descr {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 33px;
+    color: #ffffff;
+}

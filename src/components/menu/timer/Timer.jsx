@@ -1,25 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Timer.module.css';
-import intervalSvg from '../../../img/addInterval.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHandleIntervalIncr } from '../../../hooks/useHandleIntervalIncr';
 import { useInterval } from '../../../hooks/useInterval';
-import { increaseTimeInterval, removeTodo, toggleTimerRunning, toggleСomplited } from '../../../store/store';
+import { addStatistic, increaseTimeInterval, removeTodo, toggleTimerRunning } from '../../../store/store';
 import TimerBlock from './timerBlock/TimerBlock';
+
+const FormatTimer = (start, stop) => {
+  const [startMin, startSec] = start.split(':').map(Number);
+  const [stopMin, stopSec] = stop.split(':').map(Number);
+
+  const totalSeconds = (startMin * 60 + startSec) - (stopMin * 60 + stopSec);
+
+  // const hours = Math.floor(totalSeconds / 3600);
+  // const minutes = Math.floor((totalSeconds % 3600) / 60);
+  // const seconds = totalSeconds % 60;
+
+  // const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+  return (totalSeconds);
+}
+
+
 
 export const Timer = ({ taskId: { id, index } }) => {
   const dispatch = useDispatch();
-
-  const [currentFormattedTime, setCurrentFormattedTime] = useState('');
-  const [taskInfo, setTaskInfo] = useState(false);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isComplited, setIsComplited] = useState(0);
 
   const task = useSelector((state) => {
     const foundTask = state.tasks.find((item) => item.id === id);
     return foundTask || null;
   });
+
+  const [stopTimer, setStopTimer] = useState('');
+  const [taskInfo, setTaskInfo] = useState(false);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const handleIntervalIncr = useHandleIntervalIncr();
 
@@ -32,7 +47,7 @@ export const Timer = ({ taskId: { id, index } }) => {
   const formattedTime = useInterval(interval, isTimerRunning);
 
   useEffect(() => {
-    setCurrentFormattedTime(formattedTime);
+    setStopTimer(formattedTime);
   }, [formattedTime]);
 
 
@@ -46,7 +61,7 @@ export const Timer = ({ taskId: { id, index } }) => {
   const handleStopClick = () => {
     setIsTimerRunning(false);
     setIsPaused(false)
-    dispatch(increaseTimeInterval({ id, newInterval: currentFormattedTime }));
+    dispatch(increaseTimeInterval({ id, newInterval: stopTimer }));
     dispatch(toggleTimerRunning({ id, timerRunning: false }));
   };
   //Обработчик событий на ПАУЗА
@@ -59,13 +74,24 @@ export const Timer = ({ taskId: { id, index } }) => {
     setIsTimerRunning(true);
     setIsPaused(true)
   }
+
+
+
+
+
+  // const pauseStat = 10
+  const stopsStat = '10 минут'
+  const focusStat = '10%'
+  const startInterval = interval
+  const stopInterval = stopTimer
+
   //Обработчик событий на СДЕЛАНО
   const handleDoneClick = (id) => {
-    dispatch(increaseTimeInterval({ id, newInterval: currentFormattedTime }));
-    dispatch(toggleTimerRunning({ id, timerRunning: false }));
-    dispatch(toggleСomplited({ id, complited: true }))
+    const workTime = FormatTimer(interval, stopTimer)
+    setIsPaused(false)
+    dispatch(addStatistic({ workTime, stopsStat, focusStat, startInterval, stopInterval }))
     dispatch(removeTodo({ id }))
-    setIsComplited((prev) => prev + 1)
+
   }
 
   return (
@@ -81,15 +107,15 @@ export const Timer = ({ taskId: { id, index } }) => {
           handleDoneClick={handleDoneClick}
           handleStartClick={handleStartClick}
           isPaused={isPaused}
-          value={value || 'Выберите задание'}
-          index={index !== -1 ? index + 1 : ''}
-          interval={interval || '00:00'}
+          value={value}
+          index={index}
+          interval={interval}
           id={id}
         />
       ) : (
         <TimerBlock
           value={'Выберите задание'}
-          index={''}
+          index={-1}
           interval={'00:00'} />
       )
       }
