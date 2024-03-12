@@ -1,5 +1,89 @@
 .container {
     width: 952px;
-    height: 471px;
     background-color: #F4F4F4;
+}
+
+.chart_wrapper {
+    position: relative;
+    padding: 83px 0 11px;
+}
+
+.border_div {
+    display: flex;
+    position: relative;
+}
+
+.border_time {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 33px;
+    position: absolute;
+    top: -15px;
+    right: 22px;
+}
+
+.recharts-surface {
+    padding: 0;
+}
+
+.border_span {
+    display: block;
+    border: 1px solid #333333;
+    width: 843px;
+    margin-bottom: 83px;
+    opacity: 0.2;
+
+}
+
+.chart {
+    position: absolute;
+    width: 60%;
+    bottom: 10px;
+    padding: 0 0 0 42px;
+}
+
+.week_wrapper {
+    height: 51px;
+    width: 731px;
+    padding-left: 79px;
+    padding-bottom: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.week_day {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 29px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.current_day {
+    color: blue;
+}
+
+.week_day:hover {
+    color: #DC3E22;
+
+}
+
+.chart_bar:hover {
+    fill: #DC3E22
+}
+
+.chart_bar {
+    cursor: pointer;
+}
+
+.chart_XAxis {
+    font-size: 24px;
+}
+
+.chart_XAxis:hover {
+    color: #DC3E22
+
 }

@@ -15,6 +15,7 @@
     font-size: 24px;
     line-height: 33px;
     color: #333333;
+    margin-bottom: 14px;
 }
 
 .date_descr {
@@ -25,10 +26,17 @@
 }
 
 .tomato {
+    height: 179px;
     background-color: #F4F4F4;
-    padding: 23px 0 24px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.tomato_count {
+    padding: 23px 0;
+    display: flex;
     align-items: center;
 }
 
@@ -40,11 +48,13 @@
     margin-left: 15px;
 }
 
+
 .tomato_wrap {
     background-color: #DC3E22;
     padding: 9px 0;
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
 .tomato_descr {
@@ -52,4 +62,11 @@
     font-size: 24px;
     line-height: 33px;
     color: #ffffff;
+}
+
+.date_text {
+    color: #DC3E22;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 28px;
 }

@@ -6,10 +6,32 @@ import dicSvg from '../../../../../img/dic.svg'
 import redSvg from '../../../../../img/red.svg'
 import deleteSvg from '../../../../../img/delete.svg'
 import { DeleteItem } from './deleteItem/DeleteItem'
+import { useDispatch } from 'react-redux'
+import { updateTodo } from '../../../../../store/store'
 
-export const ToDoItem = ({ task, index, handleRemoveTask, handleIncreaseTimeInterval, handleClickTaskItem, isOpenDeleted, setIsOpenDeleted }) => {
+export const ToDoItem = ({ task, id, handleRemoveTask, handleClickTaskItem, isOpenDeleted, setIsOpenDeleted }) => {
+    const dispatch = useDispatch()
     const ref = useRef(null);
-    const [dropDownOpen, setDropDownOpen] = useState(false)
+    const [dropDownOpen, setDropDownOpen] = useState(false);
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedValue, setEditedValue] = useState(task.value);
+
+    const isMinusDisabled = task.tomato === 1;
+
+    const handleCountTomato = (id, operation) => {
+        let tomato;
+        switch (operation) {
+            case 'plus':
+                tomato = task.tomato + 1;
+                break;
+            case 'minus':
+                tomato = task.tomato - 1;
+                break;
+        }
+
+        dispatch(updateTodo({ id, updates: { tomato: tomato } }))
+    };
 
     const toggleDropDown = () => {
         setDropDownOpen((prevState) => !prevState);
@@ -34,13 +56,20 @@ export const ToDoItem = ({ task, index, handleRemoveTask, handleIncreaseTimeInte
         };
     }, [handleClickOutside]);
 
-
-
     return (
-        <li className={styles.item} onClick={() => handleClickTaskItem(task.id, index)}>
+        <li className={styles.item} onClick={() => handleClickTaskItem(task.id)}>
             <div className={styles.item_block} >
-                <span className={styles.index}>{index + 1}</span>
-                <h3 className={styles.title}>{task.value}</h3>
+                <span className={styles.count_pomodor}>{task.tomato}</span>
+                {isEditing ? (
+                    <input className={styles.editedInput}
+                        type="text"
+                        value={editedValue}
+                        onChange={(e) => { setEditedValue(e.target.value); }}
+                        onBlur={() => { dispatch(updateTodo({ id, updates: { value: editedValue } })); setIsEditing(false) }}
+                    />
+                ) : (
+                    <div className={styles.title}>{task.value}</div>
+                )}
             </div>
             <div ref={ref} className={styles.dropDown_wrapper}>
                 <button className={styles.btn} type='button' onClick={toggleDropDown} >
@@ -49,15 +78,15 @@ export const ToDoItem = ({ task, index, handleRemoveTask, handleIncreaseTimeInte
                 {dropDownOpen && (
                     <div className={styles.btn_dropdown} >
                         <div className={styles.dropdown_list} >
-                            <button type='button' className={styles.dropdown_item} onClick={() => handleIncreaseTimeInterval(task.id, true)}>
+                            <button type='button' className={styles.dropdown_item} onClick={() => handleCountTomato(task.id, 'plus')}>
                                 <img className={styles.dropdown_img} src={incSvg} alt="увеличить" />
                                 <span className={styles.dropdown_span}>Увеличить</span>
                             </button>
-                            <button type='button' className={styles.dropdown_item} onClick={() => handleIncreaseTimeInterval(task.id, false)}>
+                            <button type='button' className={styles.dropdown_item} onClick={() => handleCountTomato(task.id, 'minus')} disabled={isMinusDisabled}>
                                 <img className={styles.dropdown_img} src={dicSvg} alt="уменшить" />
                                 <span className={styles.dropdown_span}>Уменшить</span>
                             </button>
-                            <button type='button' className={styles.dropdown_item}>
+                            <button type='button' className={styles.dropdown_item} onClick={() => { setIsEditing(true) }}>
                                 <img className={styles.dropdown_img} src={redSvg} alt="редактировать" />
                                 <span className={styles.dropdown_span}>Редактировать</span>
                             </button>
@@ -70,7 +99,7 @@ export const ToDoItem = ({ task, index, handleRemoveTask, handleIncreaseTimeInte
                 )}
 
                 {isOpenDeleted && (
-                    <DeleteItem id={task.id} setIsOpenDeleted={setIsOpenDeleted}/>
+                    <DeleteItem id={task.id} setIsOpenDeleted={setIsOpenDeleted} />
                 )}
 
             </div>

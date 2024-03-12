@@ -1,122 +1,165 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Timer.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHandleIntervalIncr } from '../../../hooks/useHandleIntervalIncr';
-import { useInterval } from '../../../hooks/useInterval';
-import { addStatistic, increaseTimeInterval, removeTodo, toggleTimerRunning } from '../../../store/store';
 import TimerBlock from './timerBlock/TimerBlock';
+import { useDispatch, useSelector } from 'react-redux';
+import { useInterval } from '../../../hooks/useInterval';
+import { addStats, removeTodo, updateTodo } from '../../../store/store';
+import { getWeekAndDay, pauseTimer } from '../../../utils/formatTimer';
 
-const FormatTimer = (start, stop) => {
-  const [startMin, startSec] = start.split(':').map(Number);
-  const [stopMin, stopSec] = stop.split(':').map(Number);
+const getDateInfo = (currentDate) => {
+  const getWeekNumber = (date) => {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDays = (date - firstDayOfYear) / 86400000;
+    return Math.ceil((pastDays + firstDayOfYear.getDay() + 1) / 7);
+  };
 
-  const totalSeconds = (startMin * 60 + startSec) - (stopMin * 60 + stopSec);
+  const dayOfWeek = currentDate.getDay();
+  // const dayOfMonth = currentDate.getDate();
+  const weekNumber = getWeekNumber(currentDate);
 
-  // const hours = Math.floor(totalSeconds / 3600);
-  // const minutes = Math.floor((totalSeconds % 3600) / 60);
-  // const seconds = totalSeconds % 60;
+  return {
+    dayOfWeek,
+    weekNumber,
+  };
+};
 
-  // const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+export const Timer = ({ taskId }) => {
 
-  return (totalSeconds);
-}
-
-
-
-export const Timer = ({ taskId: { id, index } }) => {
   const dispatch = useDispatch();
 
-  const task = useSelector((state) => {
-    const foundTask = state.tasks.find((item) => item.id === id);
-    return foundTask || null;
-  });
+  const tasks = useSelector((state) => state.tasks);
 
-  const [stopTimer, setStopTimer] = useState('');
   const [taskInfo, setTaskInfo] = useState(false);
+  const [currentTomato, setCurrentTomato] = useState(1);
+  const { value, tomato, id } = taskInfo || {};
+
+  useEffect(() => {
+    if (tasks.length === 0 || currentTomato > tasks.reduce((maxTomato, task) => Math.max(maxTomato, task.tomato), 0)) {
+      setTaskInfo(false);
+    } else {
+      const defaultTask = tasks[0];
+      if (currentTomato > defaultTask.tomato) {
+        setTaskInfo(defaultTask);
+        setCurrentTomato(1);
+      } else {
+        const selectedTask = taskId ? tasks.find((item) => item.id === taskId) || defaultTask : defaultTask;
+        setTaskInfo(selectedTask);
+      }
+    }
+  }, [tasks, taskId, currentTomato]);
+
+  let startInterval = 1500
+
+  const [totalTomato, setTotalTomato] = useState(0);
+  let pauseInterval = totalTomato % 4 === 0 ? 1800 : 300
+
+  const [isPauseBlock, setIsPauseBlock] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-
-  const handleIntervalIncr = useHandleIntervalIncr();
+  const [timerTime, setTimerTime] = useState(null);
 
   useEffect(() => {
-    setTaskInfo(task ? true : false);
-  }, [task]);
+    setTimerTime(isPauseBlock ? pauseInterval : startInterval);
+  }, [isPauseBlock, startInterval, pauseInterval]);
 
-  const { value, interval } = task || {};
+  const { seconds, handleAddSecondsClick } = useInterval(timerTime, isTimerRunning);
 
-  const formattedTime = useInterval(interval, isTimerRunning);
+  const [isTimerPaused, setIsTimerPaused] = useState(false);
+  const [startTimerPause, setStartTimerPause] = useState(null);
 
-  useEffect(() => {
-    setStopTimer(formattedTime);
-  }, [formattedTime]);
+  const [pause, setPause] = useState(0);
+  const [stopCliced, setStopCliced] = useState(0);
 
 
-  //Обработчик событий СТАРТ
+
+
+  const currentDate = new Date()
+  let timerWorked = 0
+  let timerPaused = 0
+
+  //СТАРТ
   const handleStartClick = () => {
     setIsTimerRunning(true);
-    setIsPaused(true)
-    dispatch(toggleTimerRunning({ id, timerRunning: true }));
+    dispatch(updateTodo({ id, updates: { timerRunning: true, } }));
   };
-  //Обработчик событий СТОП
+
+  //СТОП
   const handleStopClick = () => {
+    setStopCliced(prev => prev + 1)
     setIsTimerRunning(false);
-    setIsPaused(false)
-    dispatch(increaseTimeInterval({ id, newInterval: stopTimer }));
-    dispatch(toggleTimerRunning({ id, timerRunning: false }));
+    setIsTimerPaused(false)
+    dispatch(updateTodo({ id, updates: { timerRunning: false, } }));
   };
-  //Обработчик событий на ПАУЗА
+
+  //ПАУЗА
   const handlePauseClick = () => {
+    setTimerTime(seconds)
+    setStartTimerPause(new Date);
     setIsTimerRunning(false);
-    setIsPaused(true)
+    setIsTimerPaused(true)
   }
-  //Обработчик событий на ПРОДОЛЖИТЬ
+
+  //ПРОДОЛЖИТЬ
   const handleContinueClick = () => {
+    setPause(pauseTimer(startTimerPause, new Date))
     setIsTimerRunning(true);
-    setIsPaused(true)
+    setIsTimerPaused(true)
   }
 
+  //ПРОПУСТИТЬ
+  const handleCancelClick = () => {
+    if (currentTomato >= tomato) {
+      dispatch(removeTodo({ id }))
+      setCurrentTomato(1)
+    } else {
+      dispatch(updateTodo({ id, updates: { timerRunning: true, } }));
+      setCurrentTomato(currentTomato + 1);
+    }
+    setIsPauseBlock(false)
+    dispatch(updateTodo({ id, updates: { timerRunning: false, } }));
+    setIsTimerPaused(false)
+    timerPaused = pauseInterval - seconds
+  }
 
-
-
-
-  // const pauseStat = 10
-  const stopsStat = '10 минут'
-  const focusStat = '10%'
-  const startInterval = interval
-  const stopInterval = stopTimer
-
-  //Обработчик событий на СДЕЛАНО
+  //СДЕЛАНО
   const handleDoneClick = (id) => {
-    const workTime = FormatTimer(interval, stopTimer)
-    setIsPaused(false)
-    dispatch(addStatistic({ workTime, stopsStat, focusStat, startInterval, stopInterval }))
-    dispatch(removeTodo({ id }))
-
+    const timePause = pauseTimer(startTimerPause, new Date)
+    timerWorked = startInterval - seconds
+    const pauseTime = pause + timePause
+    const { week, dayOfWeek } = getWeekAndDay(new Date)
+    setTotalTomato(prev => prev + 1)
+    setIsTimerRunning(false);
+    setStopCliced(0)
+    setIsPauseBlock(true)
+    setIsTimerPaused(false)
+    dispatch(addStats({
+      stops: stopCliced,
+      week: week,
+      dayOfWeek: dayOfWeek,
+      workTime: timerWorked,
+      pauseTime: pauseTime,
+      tomato: 1
+    }))
   }
 
   return (
     <div className={styles.container}>
-      {taskInfo ? (
+      {taskInfo && (
         <TimerBlock
           isTimerRunning={isTimerRunning}
-          formattedTime={formattedTime}
-          handleIntervalIncr={handleIntervalIncr}
+          totalSeconds={seconds}
+          isPauseBlock={isPauseBlock}
+          handleAddMinuteClick={handleAddSecondsClick}
           handlePauseClick={handlePauseClick}
           handleContinueClick={handleContinueClick}
           handleStopClick={handleStopClick}
           handleDoneClick={handleDoneClick}
           handleStartClick={handleStartClick}
-          isPaused={isPaused}
+          handleCancelClick={handleCancelClick}
+          isTimerPaused={isTimerPaused}
+          currentTomato={currentTomato}
           value={value}
-          index={index}
-          interval={interval}
           id={id}
         />
-      ) : (
-        <TimerBlock
-          value={'Выберите задание'}
-          index={-1}
-          interval={'00:00'} />
       )
       }
     </div >

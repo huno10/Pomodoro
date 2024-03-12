@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ToDo.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTodo } from '../../../../store/store';
+import { addTodo, updateTodo } from '../../../../store/store';
 import { ToDoItem } from './toDoItem/ToDoItem';
-import { useHandleIntervalIncr } from '../../../../hooks/useHandleIntervalIncr';
+import { formatOfHoursAndMinutes, formatTime } from '../../../../utils/formatTimer';
 
 export const ToDo = ({ setTaskId }) => {
     const dispatch = useDispatch();
     const tasks = useSelector((state) => state.tasks);
     const isAnyTimerRunning = tasks.some(task => task.timerRunning);
 
+    const [hours, minutes, seconds] = formatOfHoursAndMinutes(tasks.reduce((acc, time) => { return acc + time.totalTime }, 0))
+    const totalTime = formatTime(hours, minutes, seconds)
+
     const [isOpenDeleted, setIsOpenDeleted] = useState(false);
 
     const [value, setvalue] = useState('');
-    const interval = '25:00';
 
     const handleInputChange = (event) => {
         setvalue(event.target.value);
@@ -21,7 +23,7 @@ export const ToDo = ({ setTaskId }) => {
 
     const handleAddTask = () => {
         if (value.trim() !== '') {
-            dispatch(addTodo({ value, interval, isTimerRunning: false }));
+            dispatch(addTodo({ value }));
             setvalue('');
         }
     };
@@ -30,11 +32,9 @@ export const ToDo = ({ setTaskId }) => {
         setIsOpenDeleted(true)
     };
 
-    const handleIntervalIncr = useHandleIntervalIncr();
-
-    const handleClickTaskItem = (id, index) => {
+    const handleClickTaskItem = (id) => {
         if (!isAnyTimerRunning) {
-            setTaskId({ id, index });
+            setTaskId(id);
         }
     };
 
@@ -52,18 +52,21 @@ export const ToDo = ({ setTaskId }) => {
                     Добавить
                 </button>
             </div>
-            <ul>
+            <ul className={styles.list}>
                 {tasks.map((task, index) => (
                     <ToDoItem key={index}
-                        handleClickTaskItem={() => handleClickTaskItem(task.id, index)}
-                        task={task} index={index}
+                        handleClickTaskItem={() => handleClickTaskItem(task.id)}
+                        task={task}
+                        id={task.id}
                         handleRemoveTask={handleRemoveTask}
-                        handleIncreaseTimeInterval={handleIntervalIncr}
                         isOpenDeleted={isOpenDeleted}
                         setIsOpenDeleted={setIsOpenDeleted}
                     />
                 ))}
             </ul>
+
+            <div className={styles.total_time}>{tasks.length  > 0 ? totalTime : ''}</div>
+
         </div>
     );
 };

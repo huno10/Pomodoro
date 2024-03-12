@@ -1,41 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-export const useInterval = (interval, TimerRunning) => {
-    const [time, setTime] = useState(null);
-
-    useEffect(() => {
-        if (!interval || typeof interval !== 'string') {
-            return;
-        }
-
-        const [minutesStr, secondsStr] = interval.split(':');
-
-        const minutes = parseInt(minutesStr, 10);
-        const seconds = parseInt(secondsStr, 10);
-
-        if (!isNaN(minutes) && !isNaN(seconds)) {
-            const initialTime = minutes * 60 + seconds;
-            setTime(initialTime);
-        }
-    }, [interval]);
+export const useInterval = (interval, isRunning) => {
+    const [seconds, setSeconds] = useState(interval);
 
     useEffect(() => {
-        let timerInterval;
+        let timerId;
 
-        if (TimerRunning && time > 0) {
-            timerInterval = setInterval(() => {
-                setTime((prevTime) => prevTime - 1);
-            }, 10);
-        } else if (time === 0) {
-            console.log('Таймер завершен!');
+        if (isRunning && seconds > 0) {
+            timerId = setInterval(() => {
+                setSeconds((s) => s - 1);
+            }, 50);
         }
 
-        return () => clearInterval(timerInterval);
-    }, [TimerRunning, time]);
+        return () => {
+            clearInterval(timerId);
+        };
+    }, [isRunning, seconds]);
 
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    const formattedTime = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    useEffect(() => {
+        if (!isRunning) {
+            setSeconds(interval);
+        }
+    }, [isRunning, interval]);
 
-    return formattedTime;
+    const handleAddSecondsClick = () => {
+        setSeconds((s) => s + 60);
+    };
+
+    return { seconds, handleAddSecondsClick };
 };

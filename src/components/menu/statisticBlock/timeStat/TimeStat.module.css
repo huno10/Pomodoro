@@ -17,6 +17,10 @@
     background-color: #C5F1FF;
 }
 
+.container_grey {
+    background-color: #F4F4F4;
+}
+
 .info {
     display: flex;
     flex-direction: column;
@@ -36,4 +40,9 @@
     font-weight: 400;
     font-size: 64px;
     line-height: 76px;
+}
+
+.img {
+    width: 129px;
+    height: 129px;
 }

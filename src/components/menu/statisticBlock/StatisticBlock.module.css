@@ -42,6 +42,8 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 30px;
+    height: 471px;
+
 }
 
 .stat_wrapper {
