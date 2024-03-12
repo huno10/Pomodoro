@@ -12,7 +12,7 @@ export const Menu = () => {
                 <ToDoBlock setTaskId={setTaskId} />
                 <Timer taskId={taskId} />
             </div>
-            <StatisticBlock />
+          
         </menu>
     )
 }

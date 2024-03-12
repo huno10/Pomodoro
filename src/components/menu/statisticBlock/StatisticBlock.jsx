@@ -34,7 +34,7 @@ export const StatisticBlock = () => {
 
 
     return (
-        <section>
+        <section className={styles.section_statistic}>
             <div className={styles.container}>
                 <div className={styles.head_block}>
                     <h2 className={styles.title}>Ваша активность</h2>
