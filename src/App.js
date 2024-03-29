@@ -1,5 +1,4 @@
 import { Header } from "./components/header/Header";
-import { Menu } from "./components/menu/Menu";
 import { HomePage } from "./pages/HomePage";
 import { NotFound } from "./pages/NotFound";
 import { StatisticPage } from "./pages/StatisticPage";

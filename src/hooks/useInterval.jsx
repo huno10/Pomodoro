@@ -9,7 +9,7 @@ export const useInterval = (interval, isRunning) => {
         if (isRunning && seconds > 0) {
             timerId = setInterval(() => {
                 setSeconds((s) => s - 1);
-            }, 50);
+            }, 1000);
         }
 
         return () => {

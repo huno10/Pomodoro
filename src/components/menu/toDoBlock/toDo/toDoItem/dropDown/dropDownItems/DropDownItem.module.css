@@ -1,0 +1,22 @@
+.dropdown_img {
+    width: 18px;
+    height: 18px;
+}
+
+.dropdown_span {
+    font-size: 16px;
+    line-height: 17px;
+    font-weight: 300;
+    color: #999999;
+    margin-left: 8px;
+}
+
+.dropdown_item {
+    display: flex;
+    padding: 9px 15px;
+    width: 165px;
+}
+
+.dropdown_item:hover {
+    background-color: #F4F4F4;
+}
